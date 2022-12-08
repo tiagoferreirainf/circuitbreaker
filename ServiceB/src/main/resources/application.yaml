@@ -1,0 +1,39 @@
+server:
+  port: 8082
+
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+
+resilience4j:
+  circuitbreaker:
+    circuitBreakerAspectOrder: 1
+    instances:
+      serviceC:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
+        waitDurationInOpenState: 5s
+        failureRateThreshold: 50
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        failure-rate-threshold: 60
+        slow-call-duration-threshold: 2s
+        slow-call-rate-threshold: 60
+  retry:
+    retryAspectOrder: 5
+    instances:
+      serviceC:
+        maxAttempts: 5
+        waitDuration : 1s
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+
