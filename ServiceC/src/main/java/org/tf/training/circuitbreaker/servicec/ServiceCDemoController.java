@@ -23,7 +23,7 @@ public class ServiceCDemoController {
     @GetMapping("/echo")
     public ResponseEntity<String> echo(){
         log.info("Request received at service C :: Echo");
-        return ResponseEntity.ok("Service C called");
+        return ResponseEntity.ok("Service C called \n");
     }
 
     @GetMapping("/random/{id}")
