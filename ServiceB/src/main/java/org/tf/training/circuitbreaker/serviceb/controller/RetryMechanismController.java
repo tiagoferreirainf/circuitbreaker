@@ -27,7 +27,7 @@ public class RetryMechanismController {
 
     private boolean isFirstRequest = true;
 
-    private LocalDateTime storedTime = LocalDateTime.now();
+    private int counter = 0;
 
     private final ServiceCClient client;
 
@@ -42,18 +42,17 @@ public class RetryMechanismController {
     @SuppressWarnings("unused")
     public ResponseEntity<String> echoTest(@PathVariable String id) {
         if(isFirstRequest){
-            storedTime = LocalDateTime.now();
+            counter = 0;
             isFirstRequest = false;
         }
-        LocalDateTime currentTime = LocalDateTime.now();
-        Duration between = Duration.between(storedTime, currentTime);
-        log.info("Processing request id {} with time difference of {} seconds", id, between.toSeconds());
-        storedTime = currentTime;
+
+        log.info("Processing request id {} retry number {}", id, counter);
+        counter++;
         return client.callServiceCERetry();
     }
 
     @SuppressWarnings("unused")
-    private ResponseEntity<String> retryFallBack(int id, Exception e) {
+    private ResponseEntity<String> retryFallBack(String id, Exception e) {
         log.warn("RetryFallback request {} with message: ({})", id,  e.getMessage());
         String message = "RetryFallback : [" + e.getMessage() + "]\n";
         isFirstRequest = true;

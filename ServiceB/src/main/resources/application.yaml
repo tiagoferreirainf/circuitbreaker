@@ -36,4 +36,7 @@ resilience4j:
         waitDuration : 1s
         enable-exponential-backoff: true
         exponential-backoff-multiplier: 2
+        #retry-exceptions:
+        #  - org.springframework.web.client.RestClientException
+        #ignore-exceptions:
 
